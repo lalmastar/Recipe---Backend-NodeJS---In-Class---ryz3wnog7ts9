@@ -1,31 +1,29 @@
-
-var mysql = require('mysql');
+const mysql = require('mysql');
 const data = require('./data');
 
-var connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "a",
+const con = mysql.createConnection({
+    host: "database",
+    user: "database",
+    password: "abc",
     database: "test",
-    multipleStatements: true
+    insecureAuth : true
 });
 
-
-connection.connect(function (err) {
-    if (err) return console.log("failed to connect to mysql server/ database", err);
-    else return console.log("connection establish with Datebase!!!!");
+con.connect(function (err) {
+    if (err) return console.log("failed to connect to the database/server", err);
+    else return console.log("Connection establish with Database!!!!");
 });
 
 const refreshAll = async () => {
 
-    await connection.query("DROP TABLE IF EXISTS Recipes;",
+    await con.query("DROP TABLE IF EXISTS Recipes;",
         (err, result) => {
             if (err) {
                 console.log(err)
             }
         });
 
-    await connection.query("CREATE TABLE Recipes (id INT AUTO_INCREMENT PRIMARY KEY,title VARCHAR(255) NOT NULL,description VARCHAR(255),category VARCHAR(255), ingredients VARCHAR(255));",
+    await con.query("CREATE TABLE Recipes (id INT AUTO_INCREMENT PRIMARY KEY,title VARCHAR(255) NOT NULL,description VARCHAR(255),category VARCHAR(255), ingredients VARCHAR(255));",
         (err, result) => {
             if (err) {
                 console.log(err)
@@ -33,7 +31,7 @@ const refreshAll = async () => {
         });
 
     await data.forEach(element => {
-        connection.query("INSERT INTO Recipes (title, description, category, ingredients) VALUES (?,?,?,?);", [element.title, element.description, element.category, element.ingredients], (err, result) => {
+        con.query("INSERT INTO Recipes (title, description, category, ingredients) VALUES (?,?,?,?);", [element.title, element.description, element.category, element.ingredients], (err, result) => {
             if (err) {
                 console.log(err)
             }
@@ -42,4 +40,4 @@ const refreshAll = async () => {
 }
 refreshAll();
 
-module.exports = connection;
+module.exports = con;

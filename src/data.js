@@ -1,5 +1,3 @@
-// data that the student should use in his assigment
-
 let data = [
     {
         title: "Recipe1",
